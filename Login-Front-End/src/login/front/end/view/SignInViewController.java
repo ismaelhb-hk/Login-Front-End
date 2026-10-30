@@ -1,8 +1,10 @@
+package login.front.end.view;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
-package login.front.end.view;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +49,10 @@ public class SignInViewController implements Initializable {
     @FXML
     private Label lblError;    
     private Stage stage ;
+    public void setStage(Stage stage) {
+    this.stage = stage;
+}
+    
     
     
 
@@ -61,10 +67,20 @@ public class SignInViewController implements Initializable {
     public void handleTextChange (InputEvent e){
         //Borrar los mensajes de la etiqueta de error 
         this.lblError.setText("");
-    }
+        
+        
+        if(this.pwdPassword.getText().isEmpty()){
+            throw new IllegalArgumentException("Password is empty");
+                    }
+       // UserRESTCliente client = new UserRESTClient() ;
+        }
+        
+        
+    
     
     @FXML
     public void handleSignIn (ActionEvent e){
+        
         
     }    
                              
@@ -80,10 +96,7 @@ public class SignInViewController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(scene);
             //Abrir de forma modal la ventana 
-            stage.initModality(Modality.APPLICATION_MODAL
-            
-            
-            );
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         } catch (IOException ex) {
             System.getLogger(SignInViewController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -92,6 +105,8 @@ public class SignInViewController implements Initializable {
     }    
     @FXML
     public void handleWindowOpen(WindowEvent e){
+        
+        
         //todos los campos estaran vacios
         this.txtEmail.setText("");
         this.pwdPassword.setText("");
@@ -102,9 +117,10 @@ public class SignInViewController implements Initializable {
         
     }     
 
-    @Override
+
     public void initialize(URL url, ResourceBundle rb) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      
     }
     
 }
+

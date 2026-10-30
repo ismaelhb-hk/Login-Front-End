@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import login.front.end.view.SignInViewController;
 
+
 /**
  *
  * @author ismael
@@ -20,10 +21,11 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        FXMLLoader loader =
-                            new FXMLLoader(getClass().getResource("view/SignInView.fxml"));
-        Parent root =loader.load();
-        SignInViewController controller=(SignInViewController)loader.getController();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("view/SignInView.fxml"));
+        Parent root =(Parent)loader.load();
+      
+        SignInViewController controller=((SignInViewController)loader.getController());
+        
         controller.setStage(stage);
         controller.init();
         Scene scene = new Scene(root);

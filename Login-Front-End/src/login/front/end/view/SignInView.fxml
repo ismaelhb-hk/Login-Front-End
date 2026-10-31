@@ -36,7 +36,7 @@
                </font>
             </Label>
             <TextField fx:id="txtEmail" alignment="TOP_LEFT" maxWidth="-Infinity" 
-                       onInputMethodTextChanged="#handleTextChange" prefHeight="51.0" prefWidth="458.0" promptText="ejemplo@correo.com">
+                       onKeyReleased="#handleTextChange" prefHeight="51.0" prefWidth="458.0" promptText="ejemplo@correo.com">
                <font>
                   <Font size="24.0" />
                </font>
@@ -48,7 +48,7 @@
                </font>
             </Label>
             <PasswordField fx:id="pwdPassword" maxWidth="-Infinity" 
-                           onInputMethodTextChanged="#handleTextChange" prefHeight="51.0" prefWidth="457.0" promptText="Contraseña">
+                           onKeyReleased="#handleTextChange" prefHeight="51.0" prefWidth="457.0" promptText="Contraseña">
                <font>
                   <Font size="24.0" />
                </font>

@@ -6,14 +6,13 @@ package login.front.end.view;
  */
 
 
-import jakarta.ws.rs.ClientErrorException;
-import jakarta.ws.rs.client.WebTarget;
+
 import jakarta.ws.rs.core.GenericType;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,13 +29,14 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import login.front.end.client.UserRESTClient;
 import login.front.end.model.User;
-
+import java.util.logging.Logger;
 /**
  *this is the code controller 
  * @author ismael
  */
 public class SignInViewController implements Initializable {
-    
+    private static final Logger logger = 
+    Logger.getLogger("login.front.end.view.SignInViewController");
     @FXML
     private TextField txtEmail ;
     
@@ -50,10 +50,11 @@ public class SignInViewController implements Initializable {
     @FXML
     private Hyperlink linkSignUp ; 
 
-
+    
     @FXML
     private Label lblError;    
     private Stage stage ;
+    
     public void setStage(Stage stage) {
     this.stage = stage;
 }
@@ -72,11 +73,12 @@ public class SignInViewController implements Initializable {
     public void handleTextChange (InputEvent e){
         //Borrar los mensajes de la etiqueta de error 
         this.lblError.setText("");
+        String regexp = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"; 
         
-    // Si los dos campos están vacíos, no mostramos ningún error    
-    if (this.txtEmail.getText().isEmpty() && this.pwdPassword.getText().isEmpty()) {
-        return;
-    }
+        // Si los dos campos están vacíos, no mostramos ningún error    
+        if (this.txtEmail.getText().isEmpty() && this.pwdPassword.getText().isEmpty()) {
+            return;
+        }
         //Validar que ningún campo está vacío
         //y que el correo tiene formato válido
         //Si no es asi notificarselo al Usuario
@@ -92,17 +94,11 @@ public class SignInViewController implements Initializable {
         }
         
 
-        String regexp = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"; 
         if (!this.txtEmail.getText().matches(regexp)) {
             this.lblError.setText("Invalid email");
-        return;
     }
-        //consider using this annotation to enforce field validation
-        if (this.txtEmail.getText().isEmpty()) {
-            throw new IllegalArgumentException("Email is empty");
-        }
-       
-        }
+            
+}
         
         
     
@@ -110,31 +106,57 @@ public class SignInViewController implements Initializable {
     @FXML
     public void handleSignIn (ActionEvent e){
     UserRESTClient client = new UserRESTClient(); 
-    User u = new User ;
-    List <users> ;
-    //Si lblError tiene texto o algún campo está vacío, no hacemos nada (return)
+    
+
+    //Si lblError tiene texto o algún campo está vacío, no hacemos nada 
         if(!this.lblError.getText().isEmpty() || this.txtEmail.getText().isEmpty() || this.pwdPassword.getText().isEmpty()){
         return;
         }
-    try {
         //  si todo es correcto mandarlo al
         // backend mediante una peticion http
         // con Metodo get 
-     findAll_XML( )throws ClientErrorException {
-        WebTarget webTarget = null;
-        WebTarget resource = webTarget;
-        return resource.request(jakarta.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }    
+        List <User> users  ;
+        users =client.findAll_XML(new GenericType <List<User>>(){} );
         
+        //Con la funcion stream comparamos los campos que optenemos de nuestra lista de La clase 
+        //User y lo comparamos con la funcion equals con los que pone el usuario 
+            if(users.stream()
+                .filter(user->user.getEmail().equals(this.txtEmail.getText()))
+                .filter(user->user.getPassword().equals(this.pwdPassword.getText()))
+                .count()==0){
+            this.lblError.setText("This account does not exist");
+            return;
+            }
+            
+        //Obtenemos el usuario y lo guardamos en found para comunicarselo a nuestro controlador
+        // de la mainWindows
+        User found = users.stream()
+        .filter(user -> user.getEmail().equals(this.txtEmail.getText()))
+        .filter(user -> user.getPassword().equals(this.pwdPassword.getText()))
+        .findFirst()
+        .get();
+    try {
+   
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+
+        Parent root = loader.load();
+        Stage nuevaVentana = new Stage();
+        nuevaVentana.setScene(new Scene(root));
         
+        MainWindowController controller = loader.getController();
+        controller.setUser(found);
+        controller.setStage(this.stage);
         
-        
-        
-     
+        nuevaVentana.show();
+        this.stage.close(); // Cerramos la ventana de Login
+
     } catch (Exception ex) {
-        // 3. Mostrar el error: this.lblError.setText("...");
+        //  Mostrar el error
+        logger.severe("Error al conectar con el servidor: " + ex.getMessage());
+        this.lblError.setText("No se puede conectar con el servidor");
+        
     } finally {
-        // 4. client.close();
+         client.close();
     }
     }    
                              
@@ -144,7 +166,7 @@ public class SignInViewController implements Initializable {
         Parent root;
         try {
             root = FXMLLoader.load(getClass().getResource("SignUpView.fxml"));
-                    //Creo una escena y cargo la vista en la escena 
+            //Creo una escena y cargo la vista en la escena 
             Scene scene = new Scene(root);
             //Mostrar la escena en una ventana
             Stage stage = new Stage();
@@ -178,7 +200,7 @@ public class SignInViewController implements Initializable {
       
     }
 
-
-    
 }
+    
+
 

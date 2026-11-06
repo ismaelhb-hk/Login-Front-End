@@ -58,7 +58,7 @@ public class SignInViewController implements Initializable {
     
     public void setStage(Stage stage) {
     this.stage = stage;
-}
+    }
     
     
     
@@ -160,7 +160,7 @@ public class SignInViewController implements Initializable {
 
     } catch (Exception ex) {
         //  Mostrar el error
-        this.lblError.setText("No se puede conectar con el servidor");
+        this.lblError.setText("Error devuelto por el servidor  \n Inténtalo mas tarde \n o contacta con el soporte técnico");
         logger.severe("Error al conectar con el servidor: " + ex.getMessage());
 
         

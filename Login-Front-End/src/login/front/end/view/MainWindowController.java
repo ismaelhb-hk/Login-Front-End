@@ -128,15 +128,16 @@ public void setUser(User user) {
 @FXML
     public void handleChangePassword(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePasswordView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
             Parent root = loader.load();
             
             Stage nuevaVentana = new Stage();
             nuevaVentana.setScene(new Scene(root));
             
-            // ChangePasswordViewController controller = loader.getController();
-            //controller.setStage(nuevaVentana);
-            //controller.setUser(this.user); // Fundamental: pasamos el usuario
+            ChangePasswordController controller = loader.getController();
+            controller.setStage(nuevaVentana);
+            controller.setUser(this.user); // Fundamental: pasamos el usuario
+            controller.init();
             
             nuevaVentana.show();
             this.stage.close(); // Cerramos la ventana principal

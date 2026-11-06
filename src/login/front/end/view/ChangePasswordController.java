@@ -119,13 +119,33 @@ public class ChangePasswordController{
     @FXML
     public void handleChangePassword(ActionEvent e){
         UserRESTClient  client = new UserRESTClient();
-        //TODO
+           //Check empty fields
+            if (currentPasswordField.getText().isEmpty() || newPasswordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText("Todos los campos son obligatorios");
+                return;
+            }
+            //Check if new password is different
+            if (currentPasswordField.getText().equals(newPasswordField.getText())) {
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText("La nueva contraseña debe ser diferente");
+                return;
+            }
+           //Check current password and password confirmation
         if(this.user.getPassword().equals(this.currentPasswordField.getText()) && this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
-            user.setPassword(this.newPasswordField.getText());
-            
-            client.edit_XML(this.user, "102263301");
-               this.stage.close();
+            try {
+                
+                user.setPassword(this.newPasswordField.getText());
+                client.edit_XML(this.user, user.getId().toString());
+                stage.close();
+            } catch (Exception ex) {
+
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText("Error al cambiar la contraseña");
+               
+            }
         }
+           //Check if passwords match
         else if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
                 this.messageLabel.setStyle("-fx-text-fill:red");
                 this.messageLabel.setText("Las contraseñas no coinciden");
@@ -134,9 +154,11 @@ public class ChangePasswordController{
             this.messageLabel.setStyle("-fx-text-fill:red");
             this.messageLabel.setText("Contraseña actual incorrecta");
         }
+        }
+       
         
     }
     
     
 
-}
+

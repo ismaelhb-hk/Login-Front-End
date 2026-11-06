@@ -4,6 +4,7 @@
  */
 package login.front.end.view;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +19,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import login.front.end.model.User;
 
 /**
  *  This is the controller class for Change Password window.
@@ -47,6 +49,8 @@ public class ChangePasswordController{
     @FXML   
     private Stage stage ;
     
+    private User user;
+    
     public void setStage(Stage stage) {
     this.stage = stage;
     }
@@ -57,7 +61,20 @@ public class ChangePasswordController{
         
         this.newPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
         this.confirmPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
-        
+        this.currentPasswordField.textProperty().addListener(this::handleCurrentPasswordTextChange);
+        // Delete 
+        this.user=new User();
+        this.user.setLastName("Smith");
+        this.user.setFirstName("John");
+        this.user.setId(102263301L);
+        this.user.setZip(10032);
+        this.user.setCity("New York");
+        this.user.setEmail("jsmith@enterprise.net");
+        this.user.setMiddleInitial("S.");
+        this.user.setPassword("abcdOO");
+        this.user.setState("New York");
+        this.user.setStreet("163rd St.");
+        this.user.setPhone(new BigInteger("15556969699"));
         
     }
     
@@ -73,7 +90,7 @@ public class ChangePasswordController{
     }  
     
     @FXML
-    public void handleCurrentPasswordTextChange(InputEvent e){
+    public void handleCurrentPasswordTextChange(ObservableValue observable, String oldvalue, String newvalue){
         //Delete the messageLabel message, so that an old error is not left on the screen.
             this.messageLabel.setText("");
     }
@@ -86,27 +103,43 @@ public class ChangePasswordController{
                 matchLabel.setText("");
             }
             else if (newPasswordField.getText().equals(confirmPasswordField.getText())) {
-                matchLabel.setText("Las contraseñas coinciden");
+                matchLabel.setText("Las contraseñas coinciden ✅");
+                this.matchLabel.setStyle("-fx-text-fill:green");
             }
             else {
-                matchLabel.setText("Las contraseñas no coinciden");
+                this.matchLabel.setStyle("-fx-text-fill:red");
+                this.matchLabel.setText("Las contraseñas no coinciden ❌");
             }
+            
     }
     
     @FXML
     public void handleCancel(ActionEvent e){
         // Close the window without saving or sending anything to the backend.
-           
+               Stage stage = (Stage) cancelButton.getScene().getWindow();
+               stage.close();
         
     }
     
     @FXML
     public void handleChangePassword(ActionEvent e){
-        //
+        //TODO
+        if(this.user.getPassword().equals(this.currentPasswordField.getText()) && this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
+            user.setPassword(this.newPasswordField.getText());
+                           
+               this.stage.close();
+        }
+        else if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
+                this.messageLabel.setStyle("-fx-text-fill:red");
+                this.messageLabel.setText("Las contraseñas no coinciden");
+        }
+        else{
+            this.messageLabel.setStyle("-fx-text-fill:red");
+            this.messageLabel.setText("Contraseña actual incorrecta");
+        }
+        
     }
     
-    public void initialize(URL url, ResourceBundle rb) {
-      
-    }
+    
 
 }

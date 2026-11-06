@@ -21,13 +21,13 @@ public class Application extends javafx.application.Application {
         );
          Parent root = loader.load();
          
-         // Obtener el controlador asociado al FXML
+         // Get the controller associated with FXML
         ChangePasswordController controller = loader.getController();
 
-        // Pasar el Stage al controlador
+        // Pass the Stage to the controller
         controller.setStage(stage);
 
-        // Inicializar los listeners
+        // Initialize the listeners
         controller.init();
         Scene scene = new Scene(root);
         

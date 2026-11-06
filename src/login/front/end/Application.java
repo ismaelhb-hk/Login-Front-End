@@ -16,7 +16,7 @@ public class Application extends javafx.application.Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("SignUpView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("view/SignUpView.fxml"));
         
         Scene scene = new Scene(root);
         

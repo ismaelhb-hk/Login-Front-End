@@ -32,7 +32,7 @@ public class SignUpController implements Initializable {
     @FXML private PasswordField pwdConfirmPassword;
     @FXML private Label lblError;
     @FXML private Button btnSignUp;
-    @FXML private Hyperlink linkSignIn;
+    //@FXML private Hyperlink linkSignIn;
 
     public static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");

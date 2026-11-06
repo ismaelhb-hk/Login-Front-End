@@ -24,8 +24,8 @@ import jakarta.ws.rs.core.GenericType;
  */
 public class UserRESTClient {
 
-    private WebTarget webTarget;
-    private Client client;
+    private final WebTarget webTarget;
+    private final Client client;
     private static final String BASE_URI = "http://localhost:8080/Login-Back-End/webresources";
 
     public UserRESTClient() {

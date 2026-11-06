@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML.java to edit this template
  */
 package login.front.end;
-
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,7 +12,7 @@ import javafx.stage.Stage;
  *
  * @author E. Jamil
  */
-public class Application extends Application {
+public class Application extends javafx.application.Application {
     
     @Override
     public void start(Stage stage) throws Exception {

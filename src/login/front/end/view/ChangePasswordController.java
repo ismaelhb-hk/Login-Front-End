@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import login.front.end.client.UserRESTClient;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -51,7 +52,13 @@ public class ChangePasswordController{
     
     private User user;
     
+    public void setUser(User user){
+        
+        this.user=user;
+    }
+    
     public void setStage(Stage stage) {
+        
     this.stage = stage;
     }
         public void init() {
@@ -62,19 +69,7 @@ public class ChangePasswordController{
         this.newPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
         this.confirmPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
         this.currentPasswordField.textProperty().addListener(this::handleCurrentPasswordTextChange);
-        // Delete 
-        this.user=new User();
-        this.user.setLastName("Smith");
-        this.user.setFirstName("John");
-        this.user.setId(102263301L);
-        this.user.setZip(10032);
-        this.user.setCity("New York");
-        this.user.setEmail("jsmith@enterprise.net");
-        this.user.setMiddleInitial("S.");
-        this.user.setPassword("abcdOO");
-        this.user.setState("New York");
-        this.user.setStreet("163rd St.");
-        this.user.setPhone(new BigInteger("15556969699"));
+
         
     }
     
@@ -123,10 +118,12 @@ public class ChangePasswordController{
     
     @FXML
     public void handleChangePassword(ActionEvent e){
+        UserRESTClient  client = new UserRESTClient();
         //TODO
         if(this.user.getPassword().equals(this.currentPasswordField.getText()) && this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
             user.setPassword(this.newPasswordField.getText());
-                           
+            
+            client.edit_XML(this.user, "102263301");
                this.stage.close();
         }
         else if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){

@@ -42,8 +42,14 @@ public class UserRESTClient {
     }
 
     //Change password 
-    public void edit_XML(Object requestEntity, String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(jakarta.ws.rs.core.MediaType.APPLICATION_XML).put(jakarta.ws.rs.client.Entity.entity(requestEntity, jakarta.ws.rs.core.MediaType.APPLICATION_XML));
+    public <T> void edit_XML(T requestEntity, String id) throws ClientErrorException {
+        webTarget
+            .path(java.text.MessageFormat.format("{0}", new Object[]{id}))
+            .request(jakarta.ws.rs.core.MediaType.APPLICATION_XML)
+            .put(jakarta.ws.rs.client.Entity.entity(
+                requestEntity,
+                jakarta.ws.rs.core.MediaType.APPLICATION_XML
+            ));
     }
 
     public void edit_JSON(Object requestEntity, String id) throws ClientErrorException {

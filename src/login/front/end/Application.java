@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import login.front.end.view.ChangePasswordController;
+import login.front.end.view.MainWindowController;
+import login.front.end.view.SignInViewController;
 
 /**
  *
@@ -17,18 +19,19 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("view/ChangePassword.fxml")
+                getClass().getResource("view/SignInView.fxml")
         );
          Parent root = loader.load();
          
          // Get the controller associated with FXML
-        ChangePasswordController controller = loader.getController();
+         SignInViewController sincon = loader.getController();
+         
 
         // Pass the Stage to the controller
-        controller.setStage(stage);
+        sincon.setStage(stage);
 
         // Initialize the listeners
-        controller.init();
+        sincon.init();
         Scene scene = new Scene(root);
         
         stage.setScene(scene);

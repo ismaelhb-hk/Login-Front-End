@@ -5,9 +5,13 @@
 package login.front.end.client;
 
 import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST
@@ -42,14 +46,34 @@ public class UserRESTClient {
     }
 
     //Change password 
-    public <T> void edit_XML(T requestEntity, String id) throws ClientErrorException {
-        webTarget
-            .path(java.text.MessageFormat.format("{0}", new Object[]{id}))
-            .request(jakarta.ws.rs.core.MediaType.APPLICATION_XML)
-            .put(jakarta.ws.rs.client.Entity.entity(
-                requestEntity,
-                jakarta.ws.rs.core.MediaType.APPLICATION_XML
-            ));
+    public <T> void edit_XML(T requestEntity, String id) {
+
+        Response response = null;
+
+        try {
+            response = webTarget
+                    .path(id)
+                    .request(MediaType.APPLICATION_XML)
+                    .put(Entity.entity(requestEntity, MediaType.APPLICATION_XML));
+
+            int status = response.getStatus();
+
+            if (status < 200 || status >= 300) {
+                String errorMessage = response.hasEntity()
+                        ? response.readEntity(String.class)
+                        : "El servidor no ha proporcionado información adicional.";
+
+                throw new WebApplicationException(
+                        "Error HTTP " + status + ": " + errorMessage,
+                        status
+                );
+            }
+
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
     }
 
     public void edit_JSON(Object requestEntity, String id) throws ClientErrorException {

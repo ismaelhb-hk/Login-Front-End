@@ -118,46 +118,55 @@ public class ChangePasswordController{
     
     @FXML
     public void handleChangePassword(ActionEvent e){
+        
         UserRESTClient  client = new UserRESTClient();
-           //Check empty fields
-            if (currentPasswordField.getText().isEmpty() || newPasswordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
-                messageLabel.setStyle("-fx-text-fill:red");
-                messageLabel.setText("Todos los campos son obligatorios");
-                return;
-            }
-            //Check if new password is different
-            if (currentPasswordField.getText().equals(newPasswordField.getText())) {
-                messageLabel.setStyle("-fx-text-fill:red");
-                messageLabel.setText("La nueva contraseña debe ser diferente");
-                return;
-            }
-           //Check current password and password confirmation
-        if(this.user.getPassword().equals(this.currentPasswordField.getText()) && this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
-            try {
-                
-                user.setPassword(this.newPasswordField.getText());
-                client.edit_XML(this.user, user.getId().toString());
-                stage.close();
-            } catch (Exception ex) {
+        try {
+                    //Check empty fields
+                     if (currentPasswordField.getText().isEmpty() || newPasswordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
+                         throw new Exception("Todos los campos son obligatorios");
+                     }
+                     //Check if new password is different
+                     if (currentPasswordField.getText().equals(newPasswordField.getText()) )
+                         throw new Exception("La nueva contraseña debe ser diferente");
+                     
+                                //Check if passwords match
+                     if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
+                             this.messageLabel.setStyle("-fx-text-fill:red");
+                             this.messageLabel.setText("Las contraseñas no coinciden");
+                     }
+                     //check if user password is equal to textfield actual password
+                    if (this.user.getPassword().equals(this.currentPasswordField.getText()))     
+                         throw new Exception("Contraseña actual incorrecta");
+
+
+                         user.setPassword(this.newPasswordField.getText());
+
+                         client.edit_XML(this.user, user.getId().toString());
+
+                         messageLabel.setStyle("-fx-text-fill:green");
+                         messageLabel.setText("Contraseña cambiada correctamente");
+
+                         stage.close();
+                         //Handle the internal server error and Inform the User.
+            }catch (jakarta.ws.rs.WebApplicationException ex) {
 
                 messageLabel.setStyle("-fx-text-fill:red");
-                messageLabel.setText("Error al cambiar la contraseña");
-               
+                messageLabel.setText("Error interno del servidor. Inténtalo más tarde.");
+
+
+            } catch (Exception ex){
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText(ex.getMessage());
+            } finally {
+                client.close();
             }
-        }
-           //Check if passwords match
-        else if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
-                this.messageLabel.setStyle("-fx-text-fill:red");
-                this.messageLabel.setText("Las contraseñas no coinciden");
-        }
-        else{
-            this.messageLabel.setStyle("-fx-text-fill:red");
-            this.messageLabel.setText("Contraseña actual incorrecta");
-        }
-        }
        
-        
-    }
+
+        }
+       }
+       
+    
+
     
     
 

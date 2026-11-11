@@ -30,6 +30,7 @@ import javafx.stage.WindowEvent;
 import login.front.end.client.UserRESTClient;
 import login.front.end.model.User;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 /**
  *this is the code controller 
  * @author ismael
@@ -61,7 +62,7 @@ public class SignInViewController implements Initializable {
     
     public void setStage(Stage stage) {
     this.stage = stage;
-}
+    }
     
     
     
@@ -69,12 +70,18 @@ public class SignInViewController implements Initializable {
     public void init() {
         // Add listener for window
         stage.setOnShown(this::handleWindowOpen);
-        
+        this.txtEmail.textProperty().addListener(this::handleTextChange);
+        this.pwdPassword.textProperty().addListener(this::handleTextChange);
         
     }
     
+   
+    
+    
+    
     @FXML
-    public void handleTextChange (InputEvent e){
+    public void handleTextChange (ObservableValue observable , String oldValue,
+                                                              String newValue){
         //Borrar los mensajes de la etiqueta de error 
         this.lblError.setText("");
         String regexp = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"; 
@@ -116,7 +123,9 @@ public class SignInViewController implements Initializable {
         if(!this.lblError.getText().isEmpty() || this.txtEmail.getText().isEmpty() || this.pwdPassword.getText().isEmpty()){
         return;
         }
-        //  si todo es correcto mandarlo al
+
+    try {
+                //  si todo es correcto mandarlo al
         // backend mediante una peticion http
         // con Metodo get 
         List <User> users  ;
@@ -139,7 +148,6 @@ public class SignInViewController implements Initializable {
         .filter(user -> user.getPassword().equals(this.pwdPassword.getText()))
         .findFirst()
         .get();
-    try {
    
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 
@@ -149,15 +157,16 @@ public class SignInViewController implements Initializable {
         
         MainWindowController controller = loader.getController();
         controller.setUser(found);
-        controller.setStage(this.stage);
+        controller.setStage(nuevaVentana);
         
         nuevaVentana.show();
         this.stage.close(); // Cerramos la ventana de Login
 
     } catch (Exception ex) {
         //  Mostrar el error
+        this.lblError.setText("Error devuelto por el servidor  \n Inténtalo mas tarde \n o contacta con el soporte técnico");
         logger.severe("Error al conectar con el servidor: " + ex.getMessage());
-        this.lblError.setText("No se puede conectar con el servidor");
+
         
     } finally {
          client.close();
@@ -203,6 +212,9 @@ public class SignInViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
       
     }
+    
+
+    
 
 }
     

@@ -11,8 +11,10 @@ package login.front.end.model;
 
 
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigInteger;
+
 
 /**
  *
@@ -21,6 +23,13 @@ import java.math.BigInteger;
  * @author javi
  */
 
+/**
+ * La anotación @XmlRootElement  indica que
+ * cada elemento <user> del XML devuelto por el servicio REST se convierte
+ * en un objeto de esta clase.
+ */
+@XmlRootElement
+        (name = "user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

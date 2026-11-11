@@ -6,11 +6,13 @@ package login.front.end.view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -85,6 +87,8 @@ public void setUser(User user) {
           // Escribimos el mensaje de agradecimiento en la etiqueta
           
           this.lblThanks.setText("Muchas Gracias :)");
+          this.lblWelcome.setText("");
+        
     }
 
     @FXML
@@ -93,29 +97,27 @@ public void setUser(User user) {
         // que ha iniciado sesión.
         
         this.lblWelcome.setText("Bienvenido "+ user.getFirstName()+" "+user.getLastName());
-
+        this.lblThanks.setText("");
     }
     
-      //Cada ventana tiene su propio controlador, 
-      //que es una clase distinta. 
+      //Cada ventana tiene su propio controlador 
+
 
     @FXML
-public void handleLogout(ActionEvent event) {
+    public void handleLogout(ActionEvent event) {
     try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SignInView.fxml"));
         Parent root = loader.load();
+        
         
         Stage nuevaVentana = new Stage();
         nuevaVentana.setScene(new Scene(root));
         
         SignInViewController controller = loader.getController();
-        controller.setStage(this.stage);
-        controller.init();
-        // Limpiamos los campos del Login
-        // No pasamos el usuario porque cerramos sesión
-        
+        controller.setStage(nuevaVentana);
         nuevaVentana.show();
-        this.stage.close(); // Cerramos la ventana principal
+        Stage stageActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stageActual.close();  
         
     } catch (IOException ex) {
         System.getLogger(MainWindowController.class.getName()).log(System.Logger.Level.ERROR, "Error al cargar la vista de Login", ex);
@@ -126,15 +128,16 @@ public void handleLogout(ActionEvent event) {
 @FXML
     public void handleChangePassword(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePasswordView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
             Parent root = loader.load();
             
             Stage nuevaVentana = new Stage();
             nuevaVentana.setScene(new Scene(root));
             
-            ChangePasswordViewController controller = loader.getController();
+            ChangePasswordController controller = loader.getController();
             controller.setStage(nuevaVentana);
             controller.setUser(this.user); // Fundamental: pasamos el usuario
+            controller.init();
             
             
             //Abrir de forma modal la ventana 

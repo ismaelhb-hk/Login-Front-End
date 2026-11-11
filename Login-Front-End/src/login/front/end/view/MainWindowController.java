@@ -136,6 +136,9 @@ public void handleLogout(ActionEvent event) {
             controller.setStage(nuevaVentana);
             controller.setUser(this.user); // Fundamental: pasamos el usuario
             
+            
+            //Abrir de forma modal la ventana 
+            nuevaVentana.initModality(Modality.APPLICATION_MODAL);
             nuevaVentana.show();
             this.stage.close(); // Cerramos la ventana principal
             

@@ -34,13 +34,48 @@ public class SignInViewControllerTest extends ApplicationTest {
     }
     
     //Campos se inicialicen vacios
-    
+    @Test
+    public void testEstadoInicialCamposVacios() {
+        verifyThat("#txtEmail", org.testfx.matcher.control.TextInputControlMatchers.hasText(""));
+        verifyThat("#pwdPassword", org.testfx.matcher.control.TextInputControlMatchers.hasText(""));
+        verifyThat("#lblError", hasText(""));
+    }
     // Comprobar email vacio
-    
+    @Test
+      public void testValidacionEmailVacio() {
+          clickOn("#pwdPassword").write("hiwhihwohdio");
+          // Forzamos el evento de cambio de texto
+          clickOn("#txtEmail");
+
+          verifyThat("#lblError", hasText("Email is empty"));
+    }  
     //Comprobar Password vacia
-    
+    @Test
+        public void testValidacionPasswordVacio() {
+            clickOn("#txtEmail").write("ismael@gmail.com");
+            clickOn("#pwdPassword");
+
+            verifyThat("#lblError", hasText("Password is empty"));
+    }    
     // comprobar formato correcto Email
-    
+    @Test
+    public void testValidacionEmailInvalido() {
+        clickOn("#txtEmail").write("correomalisimo");
+        clickOn("#pwdPassword").write("djnjnwuw");
+        
+        verifyThat("#lblError", hasText("Invalid email"));
+    }
     
     //Intento de sesion con datos invalidos 
+    @Test
+    public void testIntentoSignInUsuarioNoExistente() {
+        clickOn("#txtEmail").write("ismael@gmail.com");
+        clickOn("#pwdPassword").write("ismaelGuapo");
+        clickOn("#btnSignIn");
+        verifyThat("#lblError", hasText("This account does not exist"));
+        //Se puede comentar la ultima linea y apagar el servidor y ver si recibimos
+        //El error que esperamos
+    }
+    
+    
 }

@@ -37,22 +37,26 @@ import java.util.logging.Logger;
 public class SignInViewController implements Initializable {
     private static final Logger logger = 
     Logger.getLogger("login.front.end.view.SignInViewController");
+    
+    
     @FXML
     private TextField txtEmail ;
-    
+    //El campo de email
     @FXML
     private PasswordField pwdPassword ;
-    
+    //El campo de Contraseña
     @FXML
     private Button btnSignIn;  
-    
+    //El boton para acceder a la MainWindows
     
     @FXML
     private Hyperlink linkSignUp ; 
-
+    //Campo de enlace para ir al SignUp
     
     @FXML
     private Label lblError;    
+    //Campo de Errores
+    
     private Stage stage ;
     
     public void setStage(Stage stage) {

@@ -24,8 +24,8 @@ Equipo de Desarrollo y Asignación de Tareas
 
 El desarrollo del proyecto ha sido llevado a cabo por un equipo de tres personas. Las funcionalidades se han dividido en tres paquetes de trabajo 
 
--Abdel               Change Password: Diseño y lógica de la ventana de cambio de contraseña, 
-                     verificación de credenciales actuales y actualización de los datos del usuario.   
+-Abdelhak Bellamkaddam      Change Password: Diseño y lógica de la ventana de cambio de contraseña, 
+                           verificación de credenciales actuales y actualización de los datos del usuario.   
 
 -Edwin Jamil        Sign Up: Diseño de la interfaz de registro de nuevos usuarios, capturación de                                datos, validación de formularios y envío de información al servidor.
 

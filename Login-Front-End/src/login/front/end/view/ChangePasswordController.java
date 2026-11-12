@@ -143,6 +143,8 @@ public class ChangePasswordController{
                          
                          messageLabel.setStyle("-fx-text-fill:green");
                          messageLabel.setText("Contraseña cambiada correctamente");
+                         
+                         this.stage.close();
 
                          
             //Handle the internal server error and Inform the User.

@@ -143,7 +143,7 @@ public void setUser(User user) {
             //Abrir de forma modal la ventana 
             nuevaVentana.initModality(Modality.APPLICATION_MODAL);
             nuevaVentana.show();
-            this.stage.close(); // Cerramos la ventana principal
+
             
         } catch (Exception ex) {
             System.getLogger(MainWindowController.class.getName()).log(System.Logger.Level.ERROR, "Error al cargar ChangePassword", ex);

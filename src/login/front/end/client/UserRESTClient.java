@@ -45,34 +45,19 @@ public class UserRESTClient {
         return resource.request(jakarta.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    //Change password 
-    public <T> void edit_XML(T requestEntity, String id) {
-
-        Response response = null;
+    //Change password method
+    public <T> void edit_XML(T requestEntity, String id) throws WebApplicationException {
+        Response response = webTarget
+                .path(id)
+                .request(MediaType.APPLICATION_XML)
+                .put(Entity.entity(requestEntity, MediaType.APPLICATION_XML));
 
         try {
-            response = webTarget
-                    .path(id)
-                    .request(MediaType.APPLICATION_XML)
-                    .put(Entity.entity(requestEntity, MediaType.APPLICATION_XML));
-
-            int status = response.getStatus();
-
-            if (status < 200 || status >= 300) {
-                String errorMessage = response.hasEntity()
-                        ? response.readEntity(String.class)
-                        : "El servidor no ha proporcionado información adicional.";
-
-                throw new WebApplicationException(
-                        "Error HTTP " + status + ": " + errorMessage,
-                        status
-                );
+            if (response.getStatus() < 200 || response.getStatus() >= 300) {
+                throw new WebApplicationException(response);
             }
-
         } finally {
-            if (response != null) {
-                response.close();
-            }
+            response.close();
         }
     }
 

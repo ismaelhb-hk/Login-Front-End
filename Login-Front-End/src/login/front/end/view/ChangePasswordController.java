@@ -4,20 +4,14 @@
  */
 package login.front.end.view;
 
-import java.math.BigInteger;
-import java.net.URL;
-import java.util.ResourceBundle;
+
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import login.front.end.client.UserRESTClient;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import login.front.end.model.User;
@@ -107,7 +101,9 @@ public class ChangePasswordController{
             }
             
     }
-    
+    /*
+    Method to close the window and return to MinWindow without making changes
+    */
     @FXML
     public void handleCancel(ActionEvent e){
         // Close the window without saving or sending anything to the backend.
@@ -115,28 +111,61 @@ public class ChangePasswordController{
                stage.close();
         
     }
-    
+    /*
+    Method to change the password, communicating with the server and controlling possible errors
+    */
     @FXML
     public void handleChangePassword(ActionEvent e){
-        UserRESTClient  client = new UserRESTClient();
-        //TODO
-        if(this.user.getPassword().equals(this.currentPasswordField.getText()) && this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
-            user.setPassword(this.newPasswordField.getText());
-            
-            client.edit_XML(this.user, "102263301");
-               this.stage.close();
-        }
-        else if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())){
-                this.messageLabel.setStyle("-fx-text-fill:red");
-                this.messageLabel.setText("Las contraseñas no coinciden");
-        }
-        else{
-            this.messageLabel.setStyle("-fx-text-fill:red");
-            this.messageLabel.setText("Contraseña actual incorrecta");
-        }
         
-    }
+        UserRESTClient  client = new UserRESTClient();
+        try {
+                    //Check empty fields
+                     if (currentPasswordField.getText().isEmpty() || newPasswordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
+                         throw new Exception("Todos los campos son obligatorios");
+                     }
+                     //Check if new password is different
+                     if (currentPasswordField.getText().equals(newPasswordField.getText()) )
+                         throw new Exception("La nueva contraseña debe ser diferente");
+                     
+                     //Check if passwords match
+                    if (!this.confirmPasswordField.getText().equals(this.newPasswordField.getText())) {
+                        throw new Exception("Las contraseñas no coinciden");
+                    }
+                     //check if user password is equal to textfield actual password
+                    if (!this.user.getPassword().equals(this.currentPasswordField.getText())) {
+                        throw new Exception("Contraseña actual incorrecta");
+                    }
+
+
+                         user.setPassword(this.newPasswordField.getText());
+
+                         client.edit_XML(this.user, user.getId().toString());
+                         
+                         messageLabel.setStyle("-fx-text-fill:green");
+                         messageLabel.setText("Contraseña cambiada correctamente");
+
+                         
+            //Handle the internal server error and Inform the User.
+            }catch (jakarta.ws.rs.WebApplicationException ex) {
+
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText("Error interno del servidor. Inténtalo más tarde.");
+
+             //Handle other errors
+            } catch (Exception ex){
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText(ex.getMessage());
+            } finally {
+                client.close();
+            }
+       
+
+        }
+       }
+       
+    
+
     
     
 
-}
+

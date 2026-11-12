@@ -5,9 +5,13 @@
 package login.front.end.client;
 
 import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST
@@ -41,15 +45,20 @@ public class UserRESTClient {
         return resource.request(jakarta.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    //Change password 
-    public <T> void edit_XML(T requestEntity, String id) throws ClientErrorException {
-        webTarget
-            .path(java.text.MessageFormat.format("{0}", new Object[]{id}))
-            .request(jakarta.ws.rs.core.MediaType.APPLICATION_XML)
-            .put(jakarta.ws.rs.client.Entity.entity(
-                requestEntity,
-                jakarta.ws.rs.core.MediaType.APPLICATION_XML
-            ));
+    //Change password method
+    public <T> void edit_XML(T requestEntity, String id) throws WebApplicationException {
+        Response response = webTarget
+                .path(id)
+                .request(MediaType.APPLICATION_XML)
+                .put(Entity.entity(requestEntity, MediaType.APPLICATION_XML));
+
+        try {
+            if (response.getStatus() < 200 || response.getStatus() >= 300) {
+                throw new WebApplicationException(response);
+            }
+        } finally {
+            response.close();
+        }
     }
 
     public void edit_JSON(Object requestEntity, String id) throws ClientErrorException {

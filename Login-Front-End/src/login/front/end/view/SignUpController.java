@@ -131,8 +131,9 @@ public class SignUpController implements Initializable {
      * @param rb  the resources used to localize the root object, or
      *            {@code null} if the root object was not localized
      * @todo Add listener validarFormulario using a method reference instead of a lambda.
-     * @todo Add listener handleSignUp for ActionEvent on btnSignUp using a method reference.
-     *       NOTE: Remember to remove onAction attribute from Button element in FXML.
+     * @todo Add ActionEvent handler handleSignUp to btnSignUp using setOnAction
+     *       convenience method and a method reference. REMEMBER to remove onAction 
+     *       attribute from FXML.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

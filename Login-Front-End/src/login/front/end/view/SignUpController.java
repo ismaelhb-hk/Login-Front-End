@@ -130,6 +130,9 @@ public class SignUpController implements Initializable {
      *            object, or {@code null} if it is not known
      * @param rb  the resources used to localize the root object, or
      *            {@code null} if the root object was not localized
+     * @todo Add listener validarFormulario using a method reference instead of a lambda.
+     * @todo Add listener handleSignUp for ActionEvent on btnSignUp using a method reference.
+     *       NOTE: Remember to remove onAction attribute from Button element in FXML.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -223,6 +226,7 @@ public class SignUpController implements Initializable {
      *
      * @return the error message to display, or an empty string if there is no
      *         problem
+     * @todo Before returning, show a WARNING type log trace with the validation error message .
      */
     public String obtenerError() {
         String cp = txtCodigoPostal.getText().trim();

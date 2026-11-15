@@ -74,6 +74,9 @@ public class SignInViewController implements Initializable {
     /**
      * Initializes window event handlers and attaches text change listeners
      * to the email and password fields for real-time validation.
+     * @todo Add ActionEvent handler handleSignIn to btnSignIn using setOnAction
+     *       convenience method and a method reference. REMEMBER to remove onAction 
+     *       attribute from FXML.
      */
     public void init() {
         // Add listener for window display event
@@ -128,6 +131,11 @@ public class SignInViewController implements Initializable {
      * appropriate error message if authentication or connection fails.
      *
      * @param e The {@link ActionEvent} triggered by clicking the Sign In button.
+     * @todo Catch ProcessingException and WebApplicationException each with its own catch 
+     *       clause to show and log "Cannot connect to server" and 
+     *       "Server side error: try again or contact support" , respectively.
+     *       Modify the general Exception catch clause to show and log ex.getMessage() returned message. 
+     *      
      */
     @FXML
     public void handleSignIn(ActionEvent e) {

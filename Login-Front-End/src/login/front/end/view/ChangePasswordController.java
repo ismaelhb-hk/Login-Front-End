@@ -55,7 +55,12 @@ public class ChangePasswordController{
         
     this.stage = stage;
     }
-        public void init() {
+    /**
+     * @todo Add ActionEvent handler handleChangePassword to changeButton using setOnAction       
+     *       convenience method and a method reference. REMEMBER to remove onAction
+     *       attribute from Button element in FXML.
+     */    
+    public void init() {
         // Add listener for window
         stage.setOnShown(this::handleWindowOpen);
         //Add listener for the text fields text change
@@ -111,9 +116,14 @@ public class ChangePasswordController{
                stage.close();
         
     }
-    /*
-    Method to change the password, communicating with the server and controlling possible errors
-    */
+    /**
+     * Method to change the password, communicating with the server and controlling possible errors
+     * @todo Catch ProcessingException and WebApplicationException each with its own catch 
+     *       clause to show and log "Server unavailable" and 
+     *       "Internal server error: try again or contact support" , respectively.
+     *       Modify the general Exception catch clause to show and log ex.getMessage() returned message. 
+     *      
+     */
     @FXML
     public void handleChangePassword(ActionEvent e){
         

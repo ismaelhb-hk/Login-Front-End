@@ -5,8 +5,11 @@
 package login.front.end.view;
 
 
+import jakarta.ws.rs.ProcessingException;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import login.front.end.client.UserRESTClient;
 import javafx.scene.control.Button;
@@ -21,6 +24,9 @@ import login.front.end.model.User;
  * @author Abdel
  */
 public class ChangePasswordController{
+    
+   private static final Logger logger =  Logger.getLogger(ChangePasswordController.class.getName());
+            
     @FXML
     private PasswordField currentPasswordField;
     
@@ -68,9 +74,12 @@ public class ChangePasswordController{
         this.newPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
         this.confirmPasswordField.textProperty().addListener(this::handleNewPasswordTextChange);
         this.currentPasswordField.textProperty().addListener(this::handleCurrentPasswordTextChange);
-
+        this.changeButton.setOnAction(this::handleChangePassword);
         
-    }
+         }
+           
+        
+    
     
     @FXML
     public void handleWindowOpen(WindowEvent e){
@@ -159,14 +168,24 @@ public class ChangePasswordController{
                          
             //Handle the internal server error and Inform the User.
             }catch (jakarta.ws.rs.WebApplicationException ex) {
-
+                    
+                this.currentPasswordField.clear();
                 messageLabel.setStyle("-fx-text-fill:red");
-                messageLabel.setText("Error interno del servidor. Inténtalo más tarde.");
+                messageLabel.setText("Internal server error: try again or contact support");
+                logger.warning(ex.getMessage());
+                
+            }catch(ProcessingException px){ 
+                this.currentPasswordField.clear();
+                messageLabel.setStyle("-fx-text-fill:red");
+                messageLabel.setText("Server unavailable");
+                logger.warning(px.getMessage());
 
              //Handle other errors
-            } catch (Exception ex){
+            } catch (Exception exe){
+                this.currentPasswordField.clear();
                 messageLabel.setStyle("-fx-text-fill:red");
-                messageLabel.setText(ex.getMessage());
+                messageLabel.setText(exe.getMessage());
+                logger.warning(exe.getMessage());
             } finally {
                 client.close();
             }

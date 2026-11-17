@@ -4,11 +4,15 @@ package login.front.end.view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.GenericType;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -79,12 +83,15 @@ public class SignInViewController implements Initializable {
      *       attribute from FXML.
      */
     public void init() {
+        logger.info("Init start");
         // Add listener for window display event
         stage.setOnShown(this::handleWindowOpen);
 
         // Attach real-time validation listeners to input fields
         this.txtEmail.textProperty().addListener(this::handleTextChange);
         this.pwdPassword.textProperty().addListener(this::handleTextChange);
+        this.btnSignIn.setOnAction(this::handleSignIn);
+        this.linkSignUp.setOnAction(this::handleGoToSignUp);
     }
 
     /**
@@ -131,6 +138,7 @@ public class SignInViewController implements Initializable {
      * appropriate error message if authentication or connection fails.
      *
      * @param e The {@link ActionEvent} triggered by clicking the Sign In button.
+     * 
      * @todo Catch ProcessingException and WebApplicationException each with its own catch 
      *       clause to show and log "Cannot connect to server" and 
      *       "Server side error: try again or contact support" , respectively.
@@ -160,6 +168,8 @@ public class SignInViewController implements Initializable {
                 return;
             }
 
+            //I can change this lambda expresion for a bucle for each 
+            
             // Retrieve the authenticated User object to pass it to MainWindowController
             User found = users.stream()
                     .filter(user -> user.getEmail().equals(this.txtEmail.getText()))
@@ -180,10 +190,30 @@ public class SignInViewController implements Initializable {
             nuevaVentana.show();
             this.stage.close(); // Close the Login window
 
-        } catch (Exception ex) {
+        } catch(WebApplicationException ex){
+            //Maneja todos los errores a diferencia de exception de cliente y servidor Esception que solo manejan 400-499 500-599
+            this.lblError.setText("Server side error: try again or contact support ");
+            logger.severe("Error de servidor : " + ex.getMessage());                
+            
+        }
+        catch(ProcessingException ex){
+            if (ex.getCause() instanceof SocketTimeoutException){
+                
+            this.lblError.setText("Cannot connect to server ");
+            logger.severe("Error Timeout: " + ex.getMessage());                
+            }
+            else{
+                
+            this.lblError.setText("Error el servidor no contesta ");
+            logger.severe("El servidor no contesta: " + ex.getMessage());                     
+            }
+            
+        }
+        catch (Exception ex) {
             // Display server connection error to the user and log details
-            this.lblError.setText("Error devuelto por el servidor  \n Inténtalo mas tarde \n o contacta con el soporte técnico");
-            logger.severe("Error connecting to the server: " + ex.getMessage());
+            this.lblError.setText("Error devuelto por el servidor  \n Inténtalo mas tarde \n o contacta con el soporte técnico"+ ex.getMessage());
+            logger.log(Level.SEVERE,"Error server ", ex.getMessage());
+            
 
         } finally {
             // Ensure the REST client connection is properly closed

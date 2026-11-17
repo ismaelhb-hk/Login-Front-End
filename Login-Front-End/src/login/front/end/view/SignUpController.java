@@ -145,7 +145,7 @@ public class SignUpController implements Initializable {
             txtEmail, txtEstado, txtCodigoPostal, txtTelefono,
             pwdPassword, pwdConfirmPassword};
         for (TextField campo : campos) {
-            campo.textProperty().addListener((obs, oldValue, newValue) -> validarFormulario());
+            campo.textProperty().addListener(this::validarFormulario);
         }
     }
 
